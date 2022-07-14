@@ -1,9 +1,11 @@
 // ignore_for_file: prefer_final_fields
 
-import 'package:flutter/foundation.dart';
+
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
+import 'package:chat/services/auth_service.dart';
 import 'package:chat/models/usuario.dart';
 
 class UsuariosPage extends StatefulWidget {
@@ -24,13 +26,21 @@ class _UsuariosPageState extends State<UsuariosPage> {
 
   @override
   Widget build(BuildContext context) {
+
+    final authService = Provider.of<AuthService>(context);
+    final usuario = authService.usuario;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Mi Nombre', style: TextStyle( color: Colors.black54 )),
+        title: Text( usuario!.nombre, style: const TextStyle( color: Colors.black54 )),
         elevation: 1,
         backgroundColor: Colors.white,
         leading: IconButton(
-          onPressed: (){}, 
+          onPressed: (){
+            // Desconectarnos de socket server
+            Navigator.pushReplacementNamed(context, 'login');
+            AuthService.deleteToken();            
+          }, 
           icon: const Icon( Icons.exit_to_app, color: Colors.black54 )
         ),
         actions: [
